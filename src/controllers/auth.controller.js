@@ -1,4 +1,4 @@
-const AuthServices = require("../services/auth.services");
+const AuthServices = require("../services/auth.service");
 const trasnporter = require("../utils/mailer");
 
 const register = async (req, res) => {
@@ -10,8 +10,8 @@ const register = async (req, res) => {
       await trasnporter.sendMail({
         to: result.email,
         from: "danihr1314@gmail.com",
-        subject: "Email confirmation",
-        html: "<h1>Welcome to the greatest Chat ever created</h1><p>Realiza la confirmacion del email para empezar</p>",
+        subject: "Account confirmation",
+        html: "<h1>Welcome to my ecommerce</h1><p>Realiza la confirmacion del email para empezar a comprar!</p>",
       });
     } else {
       res.status(400).json({ message: "somethign wrong" });
