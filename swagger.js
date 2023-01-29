@@ -14,7 +14,7 @@ const options = {
     info: {
       title: "API para Ecommerce",
       version: "0.0.9",
-      description: "Api para chat",
+      description: "Api para comprar y publicar productos",
     },
   },
 };
