@@ -1,7 +1,9 @@
 //models
-const { cart, product, product_in_cart } = require("../models");
+const { cart, product, product_in_cart, order } = require("../models");
 const CartServices = require("../services/cart.service");
+const trasnporter = require("../utils/mailer");
 
+//Add a product in the user cart -----------------------------------------------------------------------------------
 const addProduct = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
@@ -66,6 +68,7 @@ const addProduct = async (req, res) => {
   }
 };
 
+// Get all user products in her cart ---------------------------------------------------------------------
 const getAll = async (req, res) => {
   try {
     const { id } = req.params;

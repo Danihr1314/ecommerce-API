@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
  *           type: int
  *           example: 1
  *         product_in_carts:
- *           type array
+ *           type: array
  *           properties:
  *             id:
  *               type: int
@@ -24,9 +24,9 @@ module.exports = (sequelize, DataTypes) => {
  *               example: 2
  *             product_id:
  *               type: int
- *               example 5
+ *               example: 5
  *             quantity:
- *               type int
+ *               type: int
  *               example: 4
  *             price:
  *               type: int

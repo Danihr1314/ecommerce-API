@@ -7,7 +7,7 @@ const router = Router();
  * @openapi
  * /api/v1/cart/{id}:
  *   get:
- *     summary: Returns a list of products with a quantity > to 0
+ *     summary: Returns a list of products in the user cart
  *     tags: [Cart]
  *     parameters:
  *       - in: path
