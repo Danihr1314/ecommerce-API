@@ -68,8 +68,8 @@ const addProduct = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const { userId } = req.body;
-    const result = await CartServices.getAllProducts(userId);
+    const { id } = req.params;
+    const result = await CartServices.getAllProducts(id);
     res.json(result);
   } catch (error) {
     res.status(400).json(error.message);

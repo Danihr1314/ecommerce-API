@@ -5,26 +5,27 @@ const router = Router();
 
 /**
  * @openapi
- * /api/v1/cart:
+ * /api/v1/cart/{id}:
  *   get:
  *     summary: Returns a list of products with a quantity > to 0
  *     tags: [Cart]
- *     requestBody:
- *       description: Put user id to find her products in cart
- *       required: true
- *       content:
- *         application/json
- *           shcema:
- *             $ref: '#/components/schema/getCartProducts'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The user ID
  *     responses:
  *       200:
- *         description: A JSON array with products
+ *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schema/getProducts'
+ *               $ref: '#/components/schema/getCartProducts'
  *       400:
- *         description: Not found
+ *         description: not found
  *         content:
  *           application/json:
  *             schema:
@@ -32,17 +33,18 @@ const router = Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Bad request, products not found
+ *                   example: something went wrong / user not found / user does not exist
+ * /api/v1/cart/add-product:
  *   post:
- *     summary: create product
+ *     summary: add a product
  *     tags: [Cart]
  *     requestBody:
- *       description: Required fields to create a product
+ *       description: Required fields to add a product
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schema/createProduct'
+ *             $ref: '#/components/schema/addProductToCart'
  *     responses:
  *       201:
  *         description: OK
@@ -53,7 +55,7 @@ const router = Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Product created
+ *                   example: Product added
  *       400:
  *         description: not found
  *         content:
@@ -66,7 +68,7 @@ const router = Router();
  *                   example: something went wrong
  */
 
-router.get("/products", getAll);
+router.get("/:id", getAll);
 router.post("/add-product", addProduct);
 
 module.exports = router;

@@ -3,6 +3,51 @@ module.exports = (sequelize, DataTypes) => {
   return cart.init(sequelize, DataTypes);
 };
 
+/**
+ * @openapi
+ * components:
+ *   schema:
+ *     getCartProducts:
+ *       type: object
+ *       properties:
+ *         user_id:
+ *           type: int
+ *           example: 1
+ *         product_in_carts:
+ *           type array
+ *           properties:
+ *             id:
+ *               type: int
+ *               example: 2
+ *             cart_id:
+ *               type: int
+ *               example: 2
+ *             product_id:
+ *               type: int
+ *               example 5
+ *             quantity:
+ *               type int
+ *               example: 4
+ *             price:
+ *               type: int
+ *               example: 34000
+ *             status:
+ *               type: string
+ *               example: pending_purchase
+ *     addProductToCart:
+ *       type: object
+ *       properties:
+ *         userId:
+ *           type: int
+ *           example: 1
+ *         productId:
+ *           type: int
+ *           example: 4
+ *         quantity:
+ *           type: int
+ *           example: 5
+ */
+
 class cart extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     return super.init(
