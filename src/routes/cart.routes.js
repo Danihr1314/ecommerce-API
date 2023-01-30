@@ -1,5 +1,9 @@
 const { Router } = require("express");
-const { addProduct, getAll } = require("../controllers/cart.controller");
+const {
+  addProduct,
+  getAll,
+  purchase,
+} = require("../controllers/cart.controller");
 
 const router = Router();
 
@@ -68,7 +72,13 @@ const router = Router();
  *                   example: something went wrong
  */
 
+//get all cart products route
 router.get("/:id", getAll);
+
+//add product to cart route
 router.post("/add-product", addProduct);
+
+//purchase cart route
+router.post("/purchases", purchase);
 
 module.exports = router;
