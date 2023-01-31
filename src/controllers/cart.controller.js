@@ -105,7 +105,7 @@ const purchase = async (req, res) => {
         },
       ],
     });
-    console.log(findCart[0]?.dataValues?.product_in_carts[0]);
+    //console.log(findCart[0]?.dataValues?.id);
     if (!findCart) {
       return res.status(400).json({ message: "Cart not found" });
     }
