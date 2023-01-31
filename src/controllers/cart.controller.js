@@ -1,5 +1,12 @@
 //models
-const { users, cart, product, product_in_cart, order } = require("../models");
+const {
+  users,
+  cart,
+  product,
+  product_in_cart,
+  order,
+  product_in_order,
+} = require("../models");
 const CartServices = require("../services/cart.service");
 const trasnporter = require("../utils/mailer");
 
@@ -40,7 +47,7 @@ const addProduct = async (req, res) => {
 
     if (Cart) {
       const productExist = await product_in_cart.findOne({
-        where: { cart_id: Cart.id, productId },
+        where: { cart_id: Cart.id, product_id: productId },
       });
       if (!productExist) {
         await product_in_cart.create({
@@ -83,6 +90,7 @@ const getAll = async (req, res) => {
 const purchase = async (req, res) => {
   try {
     const { userId } = req.body;
+
     const findCart = await cart.findAll({
       where: { user_id: userId, cart_status: "pending_purchase" },
       attributes: ["id", "user_id", "cart_status"],
@@ -105,57 +113,59 @@ const purchase = async (req, res) => {
         },
       ],
     });
-    //console.log(findCart[0]?.dataValues?.id);
+    console.log(findCart[0].dataValues.id);
+    const cartId = findCart[0].dataValues.id;
     if (!findCart) {
       return res.status(400).json({ message: "Cart not found" });
+    } else {
+      await cart.update({
+        cart_status: "purchased",
+        where: { id: cartId },
+      });
+      await product_in_cart.update({
+        status: "purchased",
+        where: { cart_id: cartId },
+      });
     }
 
     let totalQuantity = 0;
-    let caclPrice = 0;
+    let productPrice = 0;
     let finalPrice = 0;
 
-    for (
-      let index = 0;
-      index < findCart[0].dataValues.product_in_carts[0].dataValues.length;
-      index++
-    ) {
+    const prodLength = findCart[0].dataValues.product_in_carts.length;
+    console.log(prodLength);
+
+    for (let index = 0; index < prodLength; index++) {
       totalQuantity +=
-        +findCart[0].dataValues.product_in_carts[0].dataValues.quantity;
-      caclPrice +=
-        +findCart[0].dataValues.product_in_carts[0].dataValues.product
+        findCart[0].dataValues.product_in_carts[index].dataValues.quantity;
+      productPrice +=
+        findCart[0].dataValues.product_in_carts[index].dataValues.product
           .dataValues.price;
-      finalPrice +=
-        +findCart[0].dataValues.product_in_carts[0].dataValues.quantity *
-        +findCart[0].dataValues.product_in_carts[0].dataValues.product
-          .dataValues.price;
+      finalPrice += totalQuantity * productPrice;
     }
-
-    const updateQtyOnProduct =
-      findCart[0]?.dataValues?.product_in_carts[0]?.dataValues?.map(
-        async (prod) => {
-          const findProduct = await product.findOne({
-            where: { product_id: prod.id, status: "available" },
-          });
-          const resta = prod.product.dataValues.available_qty - prod.quantity;
-          await findProduct.update({
-            quantity: resta,
-          });
-
-          return await prod.update({ status: "purchased" });
-        }
-      );
-    await findCart[0].dataValues.update({
-      cart_status: "purchased",
-    });
-
-    await Promise.all(updateQtyOnProduct);
 
     const Order = await order.create({
       user_id: userId,
-      cart_id: findCart[0].dataValues.id,
+      cart_id: cartId,
       total_price: finalPrice,
       status: "purchased",
     });
+
+    if (!Order) {
+      res.status(400).json({ message: "Orden no encontrada" });
+    } else {
+      for (let i = 0; i < prodLength; i++) {
+        await product_in_order.create({
+          order_id: Order[0].dataValues.id,
+          product_id:
+            findCart[0].dataValues.product_in_carts[i].dataValues.product
+              .dataValues.id,
+          quantity: totalQuantity,
+          price: finalPrice,
+          status: "purchased",
+        });
+      }
+    }
 
     const infoUser = await users.findOne({
       where: { id: userId },
@@ -170,7 +180,6 @@ const purchase = async (req, res) => {
     res.json({
       status: "success",
       message: "Purchased",
-      findCart,
       Order,
     });
   } catch (error) {
