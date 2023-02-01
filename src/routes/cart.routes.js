@@ -70,6 +70,38 @@ const router = Router();
  *                 message:
  *                   type: string
  *                   example: something went wrong
+ * /api/v1/cart/purchases:
+ *   post:
+ *     summary: Purchase cart
+ *     tags: [Cart]
+ *     requestBody:
+ *       description: Required fields to purchase a cart and add a order
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schema/purchaseCart'
+ *     responses:
+ *       201:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Cart purchased
+ *       400:
+ *         description: not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: something went wrong or user without cart
  */
 
 //get all cart products route

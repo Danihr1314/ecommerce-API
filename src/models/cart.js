@@ -46,6 +46,12 @@ module.exports = (sequelize, DataTypes) => {
  *         quantity:
  *           type: int
  *           example: 5
+ *     purchaseCart:
+ *       type: object
+ *       properties:
+ *         userId:
+ *           type: int
+ *           example: 1
  */
 
 class cart extends Sequelize.Model {

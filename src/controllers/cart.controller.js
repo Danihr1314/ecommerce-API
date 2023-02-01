@@ -113,19 +113,18 @@ const purchase = async (req, res) => {
         },
       ],
     });
-    console.log(findCart[0].dataValues.id);
     const cartId = findCart[0].dataValues.id;
     if (!findCart) {
       return res.status(400).json({ message: "Cart not found" });
     } else {
-      await cart.update({
-        cart_status: "purchased",
-        where: { id: cartId },
-      });
-      await product_in_cart.update({
-        status: "purchased",
-        where: { cart_id: cartId },
-      });
+      await cart.update(
+        { cart_status: "pending_purchase" },
+        { where: { id: cartId } }
+      );
+      await product_in_cart.update(
+        { status: "pending_purchase" },
+        { where: { id: cartId } }
+      );
     }
 
     let totalQuantity = 0;
@@ -133,7 +132,6 @@ const purchase = async (req, res) => {
     let finalPrice = 0;
 
     const prodLength = findCart[0].dataValues.product_in_carts.length;
-    console.log(prodLength);
 
     for (let index = 0; index < prodLength; index++) {
       totalQuantity +=
@@ -148,7 +146,7 @@ const purchase = async (req, res) => {
       user_id: userId,
       cart_id: cartId,
       total_price: finalPrice,
-      status: "purchased",
+      status: "delivered",
     });
 
     if (!Order) {
@@ -156,13 +154,11 @@ const purchase = async (req, res) => {
     } else {
       for (let i = 0; i < prodLength; i++) {
         await product_in_order.create({
-          order_id: Order[0].dataValues.id,
-          product_id:
-            findCart[0].dataValues.product_in_carts[i].dataValues.product
-              .dataValues.id,
+          order_id: Order.dataValues.id,
+          product_id: findCart[0].dataValues.product_in_carts[i].dataValues.id,
           quantity: totalQuantity,
           price: finalPrice,
-          status: "purchased",
+          status: "delivered",
         });
       }
     }
