@@ -7,6 +7,8 @@ const router = Router();
  * @openapi
  * /api/v1/orders/{id}:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Returns a list of the user orders
  *     tags: [Order]
  *     parameters:

@@ -30,6 +30,8 @@ const router = Router();
  *                   type: string
  *                   example: Bad request, products not found
  *   post:
+ *     security:
+ *       - bearerAuth: []
  *     summary: create product
  *     tags: [Products]
  *     requestBody:

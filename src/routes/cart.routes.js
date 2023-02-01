@@ -11,6 +11,8 @@ const router = Router();
  * @openapi
  * /api/v1/cart/{id}:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Returns a list of products in the user cart
  *     tags: [Cart]
  *     parameters:
@@ -40,6 +42,8 @@ const router = Router();
  *                   example: something went wrong / user not found / user does not exist
  * /api/v1/cart/add-product:
  *   post:
+ *     security:
+ *       - bearerAuth: []
  *     summary: add a product
  *     tags: [Cart]
  *     requestBody:
@@ -72,6 +76,8 @@ const router = Router();
  *                   example: something went wrong
  * /api/v1/cart/purchases:
  *   post:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Purchase cart
  *     tags: [Cart]
  *     requestBody:
